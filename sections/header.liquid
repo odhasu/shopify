@@ -346,7 +346,23 @@
     connectedCallback() {
       this.header = document.querySelector('.section-header');
       this.headerIsAlwaysSticky = this.getAttribute('data-sticky-type') === 'always' || this.getAttribute('data-sticky-type') === 'reduce-logo-size';
-      this.headerBounds = {};
+      this.headerBounds = { top: 0, bottom: 100 };
+      this.initialized = false;
+
+      // Ensure header is ready before initializing
+      if (!this.header) {
+        setTimeout(() => {
+          this.header = document.querySelector('.section-header');
+          if (this.header) this.init();
+        }, 100);
+      } else {
+        this.init();
+      }
+    }
+
+    init() {
+      if (this.initialized) return;
+      this.initialized = true;
 
       this.setHeaderHeight();
 
@@ -358,6 +374,7 @@
 
       this.currentScrollTop = 0;
       this.preventReveal = false;
+      this.preventHide = false;
       this.predictiveSearch = this.querySelector('predictive-search');
 
       this.onScrollHandler = this.onScroll.bind(this);
@@ -370,7 +387,11 @@
     }
 
     setHeaderHeight() {
-      document.documentElement.style.setProperty('--header-height', `${this.header.offsetHeight}px`);
+      if (!this.header) return;
+      const height = this.header.offsetHeight;
+      if (height > 0) {
+        document.documentElement.style.setProperty('--header-height', `${height}px`);
+      }
     }
 
     disconnectedCallback() {

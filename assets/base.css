@@ -2317,13 +2317,20 @@ input[type='checkbox'] {
   z-index: 3;
 }
 
+:root {
+  --header-height: 80px;
+}
+
 .shopify-section-header-sticky {
   position: sticky;
   top: 0;
+  z-index: 999;
+  will-change: position;
 }
 
 .shopify-section-header-hidden {
   top: calc(-1 * var(--header-height));
+  transition: top 0.3s ease-out;
 }
 
 .shopify-section-header-hidden.menu-open {
